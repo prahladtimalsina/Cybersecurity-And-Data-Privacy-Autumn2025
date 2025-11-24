@@ -33,7 +33,7 @@ The test aims to identify vulnerabilities related to input validation issues, in
 
 ### **Test approach:**
 
-* **Black-box testing** – only the running Docker application was tested.
+* **Grey-box testing**
 
 ### **Test environment & dates:**
 
@@ -60,11 +60,14 @@ The test aims to identify vulnerabilities related to input validation issues, in
 # 2️⃣ **Executive Summary**
 
 ### **Short summary:**
+The application is critically vulnerable. Any anonymous visitor can gain full administrator privileges in under 10 seconds via multiple independent paths (SQLi, open role selection, CSRF). Passwords are stored and transmitted in clear text, no security headers, and several other serious issues exist.
 
-Testing revealed several **high- and medium-severity vulnerabilities**, including **path traversal, potential SQL injection, missing CSRF protection, missing security headers, and unsafe format string processing**, making the application highly vulnerable to attacks.
+<!-- Overall risk level: CRITICAL -->
+<!-- 
+Testing revealed several **high- and medium-severity vulnerabilities**, including **path traversal, potential SQL injection, missing CSRF protection, missing security headers, and unsafe format string processing**, making the application highly vulnerable to attacks. -->
 
 ---
-### **Overall risk level:**
+### **Overall risk level: CRITICAL**
 
 🔴 **HIGH**
 
@@ -74,7 +77,8 @@ Testing revealed several **high- and medium-severity vulnerabilities**, includin
 2. Use prepared statements to prevent SQL Injection.
 3. Add CSRF protection tokens to all POST forms.
 4. Implement missing security headers: CSP, X-Frame-Options, X-Content-Type-Options.
-5. Prevent path traversal by rejecting dangerous characters (`../`, `/`, `\`).
+5. Enforce secure password storage (hashing) and transmission (HTTPS).
+6. Remove role selection from registration form
 
 ---
 
@@ -84,22 +88,41 @@ Testing revealed several **high- and medium-severity vulnerabilities**, includin
 
 | Severity Level | Description | Recommended Action |
 | -------------- | ------------------------------------------------------------------------------------------------- | -------------------------- |
-| 🔴 **High** | A serious vulnerability that can lead to system compromise (e.g., SQL Injection, Path Traversal). | **Immediate fix required** |
-| 🟠 **Medium** | A significant issue requiring certain conditions (e.g., CSRF, missing headers). | **Fix ASAP** |
-| 🟡 **Low** | Minor issue or configuration weakness. | **Fix soon** |
+| 🔴 **High** | A serious vulnerability that can lead to system compromise (e.g., SQL Injection, Path Traversal).  **SQL Injection in /register (username parameter)** | **Immediate fix required** |
+| 🟠 **Medium** | **1**. A significant issue requiring certain conditions (e.g., CSRF, missing headers). **2**.Unrestricted Role Selection –> anyone can choose “Administrator”| **Fix ASAP** |
+| 🟡 **Low** | Minor issue, Missing Security Headers (CSP, X-Frame-Options, X-Content-Type-Options). | **Fix soon** |
 | 🔵 **Info** | No direct risk but useful for hardening. | **Monitor** |
 
----
+<!-- ---
 
 # **4️⃣ Findings (Top 5)**
 
 | ID | Severity | Finding | Description | Evidence / Proof |
 | -------- | --------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| **F-01** | 🔴 High | **Path Traversal Vulnerability** | Input fields accept traversal payloads (`../`), indicating backend does not sanitize paths. | ZAP alert: *Path Traversal* (username parameter) fired with payload: ../../etc/passwd |
+| **F-01** | 🔴 High | **Path Traversal Vulnerability in username** | Input fields accept traversal payloads (`../`), indicating backend does not sanitize paths. | ZAP alert: *Path Traversal* (username parameter) fired with payload: ../../etc/passwd |
 | **F-02** | 🔴 High | **Possible SQL Injection** | Registration form reacts to `' OR '1'='1` and similar payloads with 500 errors, suggesting unsafe SQL handling. likely does not use parameterized queries | ZAP alert: *SQL Injection* (username) |
 | **F-03** | 🟠 Medium | **Absence of Anti-CSRF Token** | Registration form does not include CSRF token, allowing forged submissions. Attackers could submit unauthorized registrations . | ZAP alert: *No Anti-CSRF Token* on /register |
 | **F-04** | 🟠 Medium | **Missing Critical Security Headers** | CSP, X-Frame-Options,Referrer-Policy,Permissions-Policy and X-Content-Type-Options are missing across multiple pages. | ZAP alerts: *X-Frame-Options Header Not Set*, *Missing CSP Header*, *X-Content-Type-Options Missing* |
 | **F-05** | 🟠 Medium | **Format String Vulnerability** | Input such as `%s`, `%n`, `%x` is processed unsafely, indicating poor string handling. | ZAP alert: *Format String Error* on registration endpoint 
+
+--- -->
+
+
+---
+
+# **4️⃣ Findings (Top 5)**
+
+| ID   | Severity | Finding                                           | Description                                                                                                      | Evidence / Proof                                                                 |
+|------|----------|---------------------------------------------------|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| F-01 | High     | SQL Injection → Administrator Creation           | Stacked-query injection via username: `username='&role=administrator…` creates admin instantly                 | Burp Repeater + admin panel access                                               |
+| F-02 | High     | Unrestricted Administrator Registration          | `<select name="role">` lets any user choose "Administrator" → instant admin after normal registration         | HTML source + successful registration login                                            |
+| F-03 | High     | CSRF → Silent Administrator Creation             | No Anti-CSRF token → malicious HTML silently creates admin accounts                                            | POC HTML + DB showing new admin user                                            |
+| F-04 | High     | Plain-text Password Storage & Transmission       | Passwords visible in Burp requests and stored unhashed in database                                              | Burp POST + admin panel shows clear passwords                                   |
+| F-05 | High     | Lack of HTTPS                                     | Entire application runs over HTTP only → all traffic sniffable                                                  | Burp + Wireshark capture                                                        |
+| F-06 | Medium   | Missing Security Headers                          | CSP, X-Frame-Options, X-Content-Type-Options completely absent                                                 | Burp response headers (screenshot)                                              |
+| F-07 | Medium   | No Rate Limiting on Registration                  | Can create thousands of accounts per minute (tested 100 in 8 seconds)                                           | Burp Intruder + user list growing                                   
+|                                               |
+| F-8 | Low      | Directory Listing Enabled on /static              |debugger f12  shows all files (tailwind.css, footer.js, etc.)                                  | Browser screenshot of directory index                                           |
 
 ---
 
