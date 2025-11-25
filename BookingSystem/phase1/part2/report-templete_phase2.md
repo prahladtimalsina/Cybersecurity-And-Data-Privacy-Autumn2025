@@ -31,10 +31,11 @@ I re-tested **exactly the same Top 5 immediate actions** that I reported in Phas
 In Phase 1-> part 1, the registration endpoint was vulnerable to stacked-query SQL injection. By submitting the payload
 `username='&password=any&birthdate=any&role=administrator`
 the application executed the injected second query and instantly created a fully privileged administrator account.
-![sql found](../../images/sql_found.png)
+<!-- ![sql found](../../images/sql_found.png) -->
+![sql found](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/images/sql_found.png)
 
 In Phase1 -> part 2, I repeated the exact same attack using Burp Repeater. Instead of executing the malicious query, the application now correctly identifies that the username field does not contain a valid email address. 
-![sql found](../../images/sql_injection_fixed.png)
+![sql found](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/images/sql_injection_fixed.png)
 
 
 **It returns:**
@@ -51,7 +52,7 @@ x-content-type-options: nosniff
 
 **Finding 2 – Unrestricted Administrator Registration (originally Critical)**  
 - **Phase 1 -> Part 1 discovery:** `<select name="role">` in registration form allowed choosing “Administrator”.  
-![sql found](../../images/role_selection_burp.png)
+![sql found](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/images/role_selection_burp.png)
 
 - **Phase 1 -> Part 2 verification steps:**  
   1. Inspected GET /register HTML in Burp → role dropdown still present  
@@ -59,39 +60,39 @@ x-content-type-options: nosniff
   3. Logged in → full admin panel access  
 
 - **Result:** NOT FIXED – still anyone can become admin  
-- **Evidence:** :- ![alt text](../../images/rolection_selection_still_part2.png)
+- **Evidence:** :- ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/images/rolection_selection_still_part2.png)
 
 **Finding 3 – Missing Anti-CSRF Tokens (originally Medium → Critical when combined with #2)**  
 - **Phase 1 -> Part 1 discovery:** No token in form + POC HTML silently created admin accounts. 
-  ![HTML silently created admin accounts](../../images/csrf_part1_auto.png)
+  ![HTML silently created admin accounts](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/images/csrf_part1_auto.png)
 - **Phase 1 -> Part 2 verification steps:**  
   1. Checked form HTML → no hidden CSRF field  
   2. Opened the same POC HTML file (auto-submit)  
   3. New admin account created without any interaction  
-  ![New admin account created without any interaction  ](../../images/CSRF_on_Registration.png)
--144. ZAP Round 2 still flags this as the only remaining alert  
+  ![New admin account created without any interaction  ](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/images/CSRF_on_Registration.png)
+-. ZAP Round 2 still flags this as the only remaining alert  
 - **Result:** NOT FIXED  
 
 
 **Finding 4 – Missing Security Headers (originally Medium)**  
 - **Phase 1 -> Part 1 discovery:** CSP, X-Frame-Options, X-Content-Type-Options completely absent.  
-  ![Missing Security Headers](../../images/Missing-Security-Headers.png)
+  ![Missing Security Headers](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/images/Missing-Security-Headers.png)
 - **Phase 2 -> Part 2 verification steps:**  
   1. Intercepted GET /register in Burp  
   2. Response now contains all three headers correctly  
-  ![Security-Headers present](../../images/Security-Headers-added.png)
+  ![Security-Headers present](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/images/Security-Headers-added.png)
 - **Result:** FIXED  
 
 
 **Finding 5 – Plain-text Password Storage & Transmission (originally Critical)**  
 - **Phase 1 -> Part 1  discovery:** Passwords visible in Burp + stored clear-text in database.  
-![plain text Password in db](../../images/plain_text_password.png)
-![plain text in burp](../../images/No-Rate-Limiting-on-Registration.png)
+![plain text Password in db](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/images/plain_text_password.png)
+![plain text in burp](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/images/No-Rate-Limiting-on-Registration.png)
 - **Phase 1 -> Part 2 verification steps:**  
   1. Registered new user → password no longer visible in plain text in DB  
   2. dashboard now shows hashed passwords only  
   3. Still sent over HTTP (no TLS)  
-  ![password hash in DB](../../images/hash_password.png)
+  ![password hash in DB](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/images/hash_password.png)
 - **Result:** Storage = FIXED | Transmission = still over HTTP (partial)  
 
 
