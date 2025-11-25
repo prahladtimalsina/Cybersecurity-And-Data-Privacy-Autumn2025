@@ -76,7 +76,7 @@ x-content-type-options: nosniff
 **Finding 4 – Missing Security Headers (originally Medium)**  
 - **Phase 1 -> Part 1 discovery:** CSP, X-Frame-Options, X-Content-Type-Options completely absent.  
   ![Missing Security Headers](../../images/Missing-Security-Headers.png)
-- **Phase 2 -> part 2 verification steps:**  
+- **Phase 2 -> Part 2 verification steps:**  
   1. Intercepted GET /register in Burp  
   2. Response now contains all three headers correctly  
   ![Security-Headers present](../../images/Security-Headers-added.png)
@@ -84,10 +84,10 @@ x-content-type-options: nosniff
 
 
 **Finding 5 – Plain-text Password Storage & Transmission (originally Critical)**  
-- **Phase 1 discovery:** Passwords visible in Burp + stored clear-text in database.  
+- **Phase 1 -> Part 1  discovery:** Passwords visible in Burp + stored clear-text in database.  
 ![plain text Password in db](../../images/plain_text_password.png)
 ![plain text in burp](../../images/No-Rate-Limiting-on-Registration.png)
-- **Phase 2 verification steps:**  
+- **Phase 1 -> Part 2 verification steps:**  
   1. Registered new user → password no longer visible in plain text in DB  
   2. dashboard now shows hashed passwords only  
   3. Still sent over HTTP (no TLS)  
