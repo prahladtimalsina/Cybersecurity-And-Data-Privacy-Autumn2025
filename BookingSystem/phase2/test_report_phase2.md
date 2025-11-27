@@ -1,4 +1,4 @@
-# PHASE 3 – PASSWORD CRACKING REPORT
+# PHASE 2 – PASSWORD CRACKING REPORT
 
  
 
@@ -48,7 +48,7 @@ I performed attacks using:
 hashcat -m 0 706ab9fc256efabf4cb4cf9d31ddc8eb ~/Downloads/rockyou.txt -w 3 -O
 
 ```
-**Screenshot:** ![alt text](images/hascat/hashcat-iamyourfather.png)
+**Screenshot:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase2/images/hascat/hashcat-iamyourfather.png)
 `
 
 ### 2. Hashcat – Dictionary Attack
@@ -61,7 +61,7 @@ hashcat -m 0 706ab9fc256efabf4cb4cf9d31ddc8eb ~/Downloads/rockyou.txt -w 3 -O
 ```bash
 hashcat -m 0 d730fc82effd704296b5bbcff45f323e ~/Downloads/rockyou.txt -w 3 -O
 ```
-**Screenshot:** ![alt text](images/hascat/hashcat_doh.png)
+**Screenshot:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase2/images/hascat/hashcat_doh.png)
 
 
 ### 3. Hashcat – Dictionary Attack
@@ -74,7 +74,7 @@ hashcat -m 0 d730fc82effd704296b5bbcff45f323e ~/Downloads/rockyou.txt -w 3 -O
 ```bash
 hashcat -m 0 d50ba4dd3fe42e17e9faa9ec29f89708 ~/Downloads/rockyou.txt -w 3 -O
 ```
-**Screenshot:** ![alt text](images/hascat/hashcat_doh.png)
+**Screenshot:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase2/images/hascat/hashcat_doh.png)
 
 ### 4. John the Ripper – Dictionary Attack
 - **Hash:** `a0e8402fe185455606a2ae870dcbc4cd`  
@@ -86,7 +86,7 @@ hashcat -m 0 d50ba4dd3fe42e17e9faa9ec29f89708 ~/Downloads/rockyou.txt -w 3 -O
 ```bash
 echo "a0e8402fe185455606a2ae870dcbc4cd" > /tmp/hash.tmp && john --wordlist=~/Downloads/rockyou.txt --format=Raw-MD5 /tmp/hash.tmp && john /tmp/hash.tmp --show --format=Raw-MD5 && rm /tmp/hash.tmp
 ```
-**Screenshot:** ![alt text](images/john/john_carrot.png)
+**Screenshot:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase2/images/john/john_carrot.png)
 
 ### 5. John the Ripper – Dictionary Attack
 - **Hash:** `25f9e794323b453885f5181f1b624d0b`  
@@ -98,7 +98,7 @@ echo "a0e8402fe185455606a2ae870dcbc4cd" > /tmp/hash.tmp && john --wordlist=~/Dow
 ```bash
 echo "25f9e794323b453885f5181f1b624d0b" > /tmp/hash.tmp && john --wordlist=~/Downloads/rockyou.txt --format=Raw-MD5 /tmp/hash.tmp && john /tmp/hash.tmp --show --format=Raw-MD5 && rm /tmp/hash.tmp
 ```
-**Screenshot:** ![alt text](images/john/john_pt.png)
+**Screenshot:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase2/images/john/john_pt.png)
 
 ### 6. CrackStation – Dictionary Attack
 - **Hash:** `735f7f5e652d7697723893e1a5c04d90`  
@@ -107,7 +107,7 @@ echo "25f9e794323b453885f5181f1b624d0b" > /tmp/hash.tmp && john --wordlist=~/Dow
 - **Explanation:** I entered the MD5 hash `735f7f5e652d7697723893e1a5c04d90` into CrackStation. The tool compared the hash against its large pre-computed lookup tables, which include millions of common passwords, leaked password lists, and wordlist-based hash databases. Since this hash is widely known and associated with a very common password, CrackStation quickly found an exact match. It returned the original plaintext password `iamvengeance`, confirming that the hash existed in its database.
 This demonstrates how weak and commonly used passwords are easily cracked through online lookup services without needing GPU brute-forcing or advanced cracking tools.   
 - **Method:** Used [CrackStation](https://crackstation.net) online hash lookup service.
-**Screenshot:** ![alt text](images/crackstation_online/crack.png)
+**Screenshot:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase2/images/crackstation_online/crack.png)
 
 
 ### 7. CrackStation – Dictionary Attack
@@ -116,7 +116,7 @@ This demonstrates how weak and commonly used passwords are easily cracked throug
 - **Time Taken:** 0.1 seconds  
 - **Explanation:** Pasted the hash into https://crackstation.net — it instantly returned the password from its huge database of pre-cracked hashes   
 - **Method:** Used [CrackStation](https://crackstation.net) online hash lookup service.
-**Screenshot:** ![alt text](images/crackstation_online/crack2.png)
+**Screenshot:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase2/images/crackstation_online/crack2.png)
 
 
 ```
