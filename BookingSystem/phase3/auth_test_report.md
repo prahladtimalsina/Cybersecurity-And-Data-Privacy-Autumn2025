@@ -118,25 +118,34 @@
 ### Directory discovery:
 
 ## Command   
-`gobuster dir -u http://localhost:8003 -w /usr/share/seclists/Discovery/Web-Content/raft-small-directories.txt -b 303
-`
+
+```bash
+gobuster dir -u http://localhost:8003 -w /usr/share/seclists/Discovery/Web-Content/raft-small-directories.txt -b 303
+
+```
 
 
-**Screenshot 1:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase2/images/hascat/hashcat-iamyourfather.png)
+
+**Screenshot 1:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase3/images/gobuster1.png)
 
 
-**Screenshot 2:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase2/images/hascat/hashcat-iamyourfather.png)
+**Screenshot 2:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase3/images/gobuster1.png)
 
 
 ### API endpoint discovery:
 
 ## Command   
-`ffuf -u http://localhost:8003/api/FUZZ \                                                         
+
+
+
+```bash
+ffuf -u http://localhost:8003/api/FUZZ \                                                         
 -w /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt \
 -fc 303 \
 -fl 0 \
 -o ffuf_api.json
-`
+
+```
 
 All three detected paths returned Status: 200, not redirected
 { "FUZZ": "users", "status": 200, "length": 421 }
@@ -144,4 +153,4 @@ All three detected paths returned Status: 200, not redirected
 { "FUZZ": "reservations", "status": 200, "length": 608 }
 
 
-**Screenshot:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase2/images/hascat/hashcat-iamyourfather.png)
+**Screenshot:** ![alt text](https://raw.githubusercontent.com/prahladtimalsina/Cybersecurity-And-Data-Privacy-Autumn2025/refs/heads/main/BookingSystem/phase3/images/ffuf.png)
