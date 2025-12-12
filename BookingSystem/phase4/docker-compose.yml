@@ -1,0 +1,27 @@
+name: cybersec-phase4
+services:
+  database:
+    image: vheikkiniemi/cybersec-db-phase4:v2.0
+    restart: always
+    container_name: cybersec-db-phase4
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Secret1234!
+      POSTGRES_DB: postgres
+    ports:
+      - "5436:5432"
+    volumes:
+      - pgroot:/var/lib/postgresql
+  web:
+    image: vheikkiniemi/cybersec-web-phase4:v2.1
+    container_name: cybersec-web-phase4
+    restart: always
+    ports:
+      - "8004:8000"
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: "postgres://postgres:Secret1234!@database:5432/postgres"
+
+volumes:
+  pgroot: {}
