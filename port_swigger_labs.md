@@ -13,6 +13,10 @@
 
 - I solved the login-bypass lab by entering administrator'-- in the username field. The application checks credentials by building a SQL query from the login inputs; my payload closed the username string and turned the rest of the WHERE clause into a comment, so the password check was ignored and I gained administrator access. I learned how fragile authentication is when SQL is built from raw input. The trickiest part was discovering which characters the form accepted. Simple fixes are parameterized/prepared statements and server-side input validation.
 
+
+
+
+
 ## Topic Authentication
 
 ### Lab: Username enumeration via different responses
@@ -29,9 +33,10 @@
 
 ### Lab: Unprotected admin functionality
 
-- I discovered and exploited an unprotected admin panel that allowed deletion of users. By changing the URL—trying endings like admin-panel, admin, or administrator—I was able to locate the administrator interface. Because access relied only on obscurity (hoping users wouldn’t try URL tampering), the panel was reachable simply by modifying the URL to administrator-panel. Once inside, I could use the admin functions to remove user accounts.
+- I discovered and exploited an unprotected admin panel that allowed deletion of users. By changing the URL trying endings like admin-panel, admin, or administrator. I was able to locate the administrator interface. Because access relied only on obscurity (hoping users wouldn’t try URL tampering), the panel was reachable simply by modifying the URL to administrator-panel. Once inside, I could use the admin functions to remove user accounts.
 
 
 ### Lab: User role modifiable in profile
 
-- In this lab I discovered a vulnerability that let the client change their own roleid value. The app determined access rights at login but stored that role info on the client side and trusted it. By changing roleid from the default 1 to 2, I gained administrator privileges. The root cause was broken access control: never rely on client-side values for security — enforce roles and permissions on the server.
+- In this lab I discovered a vulnerability that let the client change their own roleid value. The app determined access rights at login but stored that role info on the client side and trusted it. By changing roleid from the default 1 to 2, I gained administrator privileges. The root cause was broken access control: never rely on client-side values for security  enforce roles and permissions on the server.
+
